@@ -1,26 +1,17 @@
 package com.github.revisiteduser0.discrod_bot;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Main {
     public static void main(String[] args) {
-    }
-}
-
-class BotConfiguration {
-    private static String token;
-
-    private static Properties properties = new Properties();
-
-    private static void readToken() throws IOException {
-        FileInputStream fis = new FileInputStream("token.env");
-        properties.load(fis);
-        BotConfiguration.token = properties.getProperty("DISCORD_TOKEN");
-
-
-    }
-    public static String getToken() {
-        return BotConfiguration.token;
+        try {
+            JDA jda = JDABuilder.createLight(BotConfiguration.getToken(), GatewayIntent.GUILD_MEMBERS)
+                    .build()
+                    .awaitReady();
+        } catch (InterruptedException e) {
+            System.err.println("Поток был прерван во время ожидания готовности JDA");
+            Thread.currentThread().interrupt();
+        }
     }
 }
